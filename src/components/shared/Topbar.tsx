@@ -42,13 +42,12 @@ const TopBarComponent = () => {
     }
 
 
-    return <AppBar position="absolute" className={classes.appBar}>
+    return <AppBar position="absolute" className={classes.appBar} sx={{backgroundColor:theme.palette.background.paper, color:theme.palette.text.primary}}>
         <Toolbar>
             <Grid container sx={{
                 display: 'flex',
                 flexDirection: 'row',
                 flex: 1,
-                width: '100%',
                 justifyContent: 'space-between',
                 alignItems: 'center'
             }}>

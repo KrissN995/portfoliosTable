@@ -28,6 +28,32 @@
   color: #61dafb;
 }
 
+.ag-theme-alpine {
+  display: grid;
+  background-color: #FFFFFF;
+  color: #181d1f;
+  --ag-foreground-color: "#181d1f";
+  --ag-data-color: "#181d1f";
+  font-size: 9px;
+}
+
+.ag-theme-alpine.ag-root-wrapper-body.ag-layout-normal {
+  height: 100%;
+}
+
+.ag-theme-alpine-dark {
+  display: grid;
+  background-color: #000000;
+  color: #FF9826;
+  --ag-foreground-color: "#FF9826";
+  --ag-data-color: "#FF9826";
+  font-size: 9px;
+}
+
+.ag-theme-alpine-dark.ag-root-wrapper-body.ag-layout-normal {
+  height: 100%;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

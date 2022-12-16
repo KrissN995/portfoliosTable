@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "./store/slices/rootSlice";
 import {Theme, ThemeProvider} from "@mui/material";
 import MainPage from "./pages/MainPage";
+import FadeIn from "react-fade-in";
 
 const App = () => {
     const {isDarkTheme} = useSelector((state: RootState) => state.app);
@@ -16,7 +17,9 @@ const App = () => {
 
     return (<>
         <ThemeProvider theme={localTheme ?? (isDarkTheme ? darkTheme : lightTheme)}>
-            <MainPage/>
+            <FadeIn>
+                <MainPage/>
+            </FadeIn>
         </ThemeProvider>
     </>);
 }

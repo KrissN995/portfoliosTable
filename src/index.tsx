@@ -7,6 +7,10 @@ import App from './App';
 import {Provider} from 'react-redux';
 import store from './store/store';
 
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 const root = ReactDOM.createRoot(
     // @ts-ignore
     document.getElementById('root')
