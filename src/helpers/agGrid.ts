@@ -2,8 +2,9 @@
  * Sets the ag-grid theme based on the selected theme in the app
  * @param isDark
  */
-import {SideBarDef, ValueGetterParams} from "ag-grid-community";
+import {SideBarDef, ValueFormatterParams, ValueGetterParams} from "ag-grid-community";
 import {Asset} from "../models/appModels";
+import {capitalizeLetters, fiatNumberFormatter} from "./app";
 
 export const getGridTheme = (isDark: boolean): string => {
     return isDark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine';
@@ -47,10 +48,21 @@ export const aggregateValues = (params: ValueGetterParams, field: string) => {
 export const aggregateRestrictionStatus = (params: ValueGetterParams) => {
     if (params?.data && params.data.portfolios?.length > 0) {
         const allPortfolios = params.data.portfolios;
-        return allPortfolios.flatMap((x: any) => x.restrictionStatus);
+        return allPortfolios.flatMap((x: any) => capitalizeLetters(x.restrictionStatus));
     } else
         return '';
 }
+
+/**
+ * Cell formatter for formatting quantity
+ * @param params
+ */
+export const valueFormatter = (params: ValueFormatterParams) => {
+    if (params.value) {
+        return fiatNumberFormatter.format(params.value);
+    }
+    return params.value;
+};
 
 export const DefaultColDef = {
     filter: true,

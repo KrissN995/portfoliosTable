@@ -9,7 +9,7 @@ import {
     DefaultColDef,
     DefaultSideBarDef,
     DefaultStatusPanelDef,
-    getGridTheme
+    getGridTheme, valueFormatter
 } from "../../helpers/agGrid";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/slices/rootSlice";
@@ -352,7 +352,8 @@ const MainComponent = () => {
                 minWidth: 230,
                 valueGetter: (params: ValueGetterParams) => {
                     return aggregateValues(params, 'netWorth')
-                }
+                },
+                valueFormatter: (params: any) => valueFormatter(params),
             },
             {
                 headerName: 'Aggregated Restriction Status',
@@ -371,7 +372,8 @@ const MainComponent = () => {
                 minWidth: 120,
                 valueGetter: (params: ValueGetterParams) => {
                     return aggregateValues(params, 'capitalGain')
-                }
+                },
+                valueFormatter: (params: any) => valueFormatter(params),
             },
         ];
     }, []);
