@@ -1,13 +1,21 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Grid, Paper, Theme} from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
 import {Client} from "../../models/appModels";
 import clsx from 'clsx';
-import {DefaultColDef, DefaultSideBarDef, DefaultStatusPanelDef, getGridTheme} from "../../helpers/agGrid";
+import {
+    aggregateRestrictionStatus,
+    aggregateValues,
+    DefaultColDef,
+    DefaultSideBarDef,
+    DefaultStatusPanelDef,
+    getGridTheme
+} from "../../helpers/agGrid";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/slices/rootSlice";
 import {AgGridReact} from "ag-grid-react";
-import {ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent} from "ag-grid-community";
+import {ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, ValueGetterParams,} from "ag-grid-community";
+import SearchBox from "../shared/SearchBox";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -18,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     grid: {
         flex: 1,
+        marginTop: '2em'
     },
 }));
 
@@ -40,7 +49,7 @@ const MainComponent = () => {
     const {
         isDarkTheme,
     } = useSelector((state: RootState) => state.app);
-    const [gridApi, setGridApi] = useState<GridApi|null>(null);
+    const [gridApi, setGridApi] = useState<GridApi | null>(null);
     const [rowData] = useState<Client[]>([
             {
                 clientId: "cli18874",
@@ -313,53 +322,56 @@ const MainComponent = () => {
                 ]
             }
         ]
-
     );
 
     const getColumnDefs = useMemo((): (ColDef | ColGroupDef)[] => {
         return [
             {
-                headerName: 'Client Id',
+                headerName: 'Client Name',
                 field: 'clientId',
+                sortingOrder:(['asc', 'desc']),
                 minWidth: 145,
-                maxWidth: 250,
-            },
-            {
-                headerName: 'First Name',
-                field: 'firstName',
-                minWidth: 90,
-                maxWidth: 180,
-            },
-            {
-                headerName:'Last Name',
-                field: 'lastName',
-                minWidth: 100,
-                hide: true,
-            },
-            {
-                headerName: 'Residence',
-                field:'residence',
-                minWidth: 210,
-            },
-            {
-                headerName: 'Currency',
-                field:'currency',
-                minWidth: 230,
-            },
-            {
-                headerName: 'Annual Income',
-                field: 'annualIncome',
-                minWidth: 120,
+                valueGetter: (params: ValueGetterParams) => {
+                    if (params.data) {
+                        return `${params.data.firstName ?? ''} ${params.data.lastName ?? ''}`;
+                    } else
+                        return '';
+                },
             },
             {
                 headerName: 'Risk Profile',
                 field: 'riskProfile',
-                minWidth: 120,
+                sortingOrder:(['asc', 'desc']),
+                minWidth: 80,
             },
             {
-                headerName: 'Client Type',
-                field: 'clientType',
+                headerName: 'Aggregated Net Worth ',
+                field: 'clientId',
+                sortingOrder:(['asc', 'desc']),
+                type: 'numericColumn',
+                minWidth: 230,
+                valueGetter: (params: ValueGetterParams) => {
+                    return aggregateValues(params, 'netWorth')
+                }
+            },
+            {
+                headerName: 'Aggregated Restriction Status',
+                field: 'clientId',
+                sortingOrder:(['asc', 'desc']),
                 minWidth: 120,
+                valueGetter: (params: ValueGetterParams) => {
+                    return aggregateRestrictionStatus(params)
+                }
+            },
+            {
+                headerName: 'Aggregated Capital Gain',
+                field: 'clientId',
+                sortingOrder:(['asc', 'desc']),
+                type: 'numericColumn',
+                minWidth: 120,
+                valueGetter: (params: ValueGetterParams) => {
+                    return aggregateValues(params, 'capitalGain')
+                }
             },
         ];
     }, []);
@@ -368,13 +380,34 @@ const MainComponent = () => {
         setGridApi(params.api);
     };
 
-    return ( <Paper elevation={3} className={clsx(getGridTheme(isDarkTheme), classes.root)}>
+    /**
+     * Filters the grid data based on the passed value
+     * @param value
+     */
+    const onSearchBoxChange = (value: string) => {
+        gridApi?.setQuickFilter(value);
+    };
+
+    useEffect(() => {
+        if (rowData) {
+            rowData.sort(function (a, b) {
+                if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1;
+                if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1;
+                return 0;
+            });
+        }
+    }, [rowData])
+
+    return (<Paper elevation={3} className={clsx(getGridTheme(isDarkTheme), classes.root)}>
+        <div style={{display: 'flex', height: '4em', justifyContent: 'flex-end', alignItems: 'center'}}>
+            <SearchBox onChange={onSearchBoxChange}/>
+        </div>
         <Grid item className={clsx(getGridTheme(isDarkTheme), classes.grid)}>
             <AgGridReact gridOptions={gridOptions}
                          onGridReady={onGridReady}
                          columnDefs={getColumnDefs}
                          serverSideInfiniteScroll={true}
-                         rowData={rowData??[]}/>
+                         rowData={rowData ?? []}/>
         </Grid>
     </Paper>);
 
