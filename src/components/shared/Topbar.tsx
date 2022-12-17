@@ -6,7 +6,6 @@ import {useAppDispatch} from '../../store/store';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/slices/rootSlice';
 import {AppBar, Grid, IconButton, Theme, Tooltip} from '@mui/material';
-import useWindowSize from "../../hooks/useWindowSize";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import {setIsDarkTheme} from "../../store/slices/appSlice";
 import makeStyles from "@mui/styles/makeStyles";
@@ -35,14 +34,14 @@ const TopBarComponent = () => {
     const {
         isDarkTheme,
     } = useSelector((state: RootState) => state.app);
-    const windowSize = useWindowSize()
 
     const handleThemeChange = () => {
         dispatch(setIsDarkTheme(!isDarkTheme));
     }
 
 
-    return <AppBar position="absolute" className={classes.appBar} sx={{backgroundColor:theme.palette.background.paper, color:theme.palette.text.primary}}>
+    return <AppBar position="absolute" className={classes.appBar}
+                   sx={{backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary}}>
         <Toolbar>
             <Grid container sx={{
                 display: 'flex',

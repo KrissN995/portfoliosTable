@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Grid, Paper, Theme} from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
 import {Client} from "../../models/appModels";
@@ -362,7 +362,7 @@ const MainComponent = () => {
                 minWidth: 120,
             },
         ];
-    }, [isDarkTheme]);
+    }, []);
 
     const onGridReady = (params: GridReadyEvent) => {
         setGridApi(params.api);
