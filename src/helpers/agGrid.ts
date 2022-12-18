@@ -1,15 +1,23 @@
-/**
- * Sets the ag-grid theme based on the selected theme in the app
- * @param isDark
- */
 import {ICellRendererParams, SideBarDef, ValueGetterParams} from "ag-grid-community";
 import {Asset} from "../models/appModels";
 import {capitalizeLetters, fiatNumberFormatter} from "./app";
 import {ExchangeRate} from "../models/currencyModels";
 
+/**
+ * Sets the ag-grid theme based on the selected theme in the app
+ * @param isDark
+ */
 export const getGridTheme = (isDark: boolean): string => {
     return isDark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine';
 };
+
+/**
+ * Calculates client aggregated values for all portfolios assets in the client currency
+ * @param data
+ * @param field
+ * @param exchangeRates
+ * @param clientCurrency
+ */
 export const calculateAggregatedValues = (data: Asset[], field: string, exchangeRates: ExchangeRate, clientCurrency: string) => {
     let portfolioAssociatedRisk: number = 0;
     let portfolioCapitalGain: number = 0;
@@ -47,6 +55,13 @@ export const calculateAggregatedValues = (data: Asset[], field: string, exchange
             return 0;
     }
 }
+
+/**
+ * Value getter to return the corresponded aggregated value
+ * @param params
+ * @param field
+ * @param exchangeRates
+ */
 export const aggregateValues = (params: ValueGetterParams, field: string, exchangeRates: ExchangeRate) => {
     if (params?.data && params.data.portfolios?.length > 0) {
         const allAssets = params.data.portfolios.flatMap((x: any) => x.assets);
@@ -59,6 +74,10 @@ export const aggregateValues = (params: ValueGetterParams, field: string, exchan
         return 0;
 }
 
+/**
+ * Value Getter to return all portfolios restriction status for the specific client
+ * @param params
+ */
 export const aggregateRestrictionStatus = (params: ValueGetterParams) => {
     if (params?.data && params.data.portfolios?.length > 0) {
         const allPortfolios = params.data.portfolios;

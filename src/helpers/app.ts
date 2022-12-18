@@ -1,30 +1,30 @@
-export const getBrowserLocales = (options = {}): string[] => {
-    const defaultOptions = {
-        languageCodeOnly: false
-    };
-
-    const opt = {
-        ...defaultOptions,
-        ...options
-    };
-
-    const browserLocales = navigator.languages === undefined ? [navigator.language] : navigator.languages;
-
-    if (!browserLocales) {
-        return [];
-    }
-
-    return browserLocales.map((locale) => {
-        const trimmedLocale = locale?.trim();
-
-        return opt.languageCodeOnly ? trimmedLocale.split(/[-_]/)[0] : trimmedLocale;
-    });
-};
-
-export const getBrowserLocale = (): string => {
-    const locales = getBrowserLocales();
-    return locales[0];
-};
+// export const getBrowserLocales = (options = {}): string[] => {
+//     const defaultOptions = {
+//         languageCodeOnly: false
+//     };
+//
+//     const opt = {
+//         ...defaultOptions,
+//         ...options
+//     };
+//
+//     const browserLocales = navigator.languages === undefined ? [navigator.language] : navigator.languages;
+//
+//     if (!browserLocales) {
+//         return [];
+//     }
+//
+//     return browserLocales.map((locale) => {
+//         const trimmedLocale = locale?.trim();
+//
+//         return opt.languageCodeOnly ? trimmedLocale.split(/[-_]/)[0] : trimmedLocale;
+//     });
+// };
+//
+// export const getBrowserLocale = (): string => {
+//     const locales = getBrowserLocales();
+//     return locales[0];
+// };
 
 /**
  * Check if values is empty
@@ -40,7 +40,7 @@ export const isValueEmpty = (value: any): boolean => {
 /**
  * Fiat number formatter with maximum fraction digits of 2
  */
-export const fiatNumberFormatter = new Intl.NumberFormat(getBrowserLocale(), {
+export const fiatNumberFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
     minimumFractionDigits: 0
 });

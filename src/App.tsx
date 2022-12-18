@@ -11,6 +11,9 @@ const App = () => {
     const {isDarkTheme} = useSelector((state: RootState) => state.app);
     const [localTheme, setLocalTheme] = useState<Theme>(lightTheme)
 
+    /**
+     * Sets the theme on start
+     */
     useEffect(() => {
         setLocalTheme(isDarkTheme ? darkTheme : lightTheme);
     }, [isDarkTheme])

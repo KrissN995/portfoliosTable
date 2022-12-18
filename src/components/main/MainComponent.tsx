@@ -65,6 +65,9 @@ const MainComponent = () => {
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
     const [rowData, setRowData] = useState<Client[]>([]);
 
+    /**
+     * Sets the column definitions for the ag grid
+     */
     const getColumnDefs = useMemo((): (ColDef | ColGroupDef)[] => {
         return [
             {
@@ -119,6 +122,10 @@ const MainComponent = () => {
         ];
     }, [exchangeRates]);
 
+    /**
+     * Sets the gridApi
+     * @param params
+     */
     const onGridReady = (params: GridReadyEvent) => {
         setGridApi(params.api);
     };
@@ -131,11 +138,17 @@ const MainComponent = () => {
         gridApi?.setQuickFilter(value);
     };
 
+    /**
+     * Fetches the data and the currency exchange rates
+     */
     useEffect(() => {
         dispatch(fetchClientData());
         dispatch(fetchCurrencyExchangeRates('CHF'));
     }, [dispatch]);
 
+    /**
+     * Sets the row data for the ag grid
+     */
     useEffect(() => {
         if (clientData && exchangeRates) {
             console.log(exchangeRates);
