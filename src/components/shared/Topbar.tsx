@@ -35,10 +35,12 @@ const TopBarComponent = () => {
         isDarkTheme,
     } = useSelector((state: RootState) => state.app);
 
+    /**
+     * Changes the theme of the app
+     */
     const handleThemeChange = () => {
         dispatch(setIsDarkTheme(!isDarkTheme));
     }
-
 
     return <AppBar position="absolute" className={classes.appBar}
                    sx={{backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary}}>

@@ -1,11 +1,10 @@
 import {IconButton, InputAdornment, TextField, Theme, Tooltip, useTheme} from '@mui/material';
-// import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from '@mui/icons-material/Search';
 import React, {useEffect, useState} from 'react';
 import {isValueEmpty} from '../../helpers/app';
 import CloseIcon from '@mui/icons-material/Close';
 
-const SearchBox = ({disabled, onChange}: { disabled?: boolean, onChange: (value: string) => void }) => {
+const SearchBox = ({onChange}: {onChange: (value: string) => void }) => {
     const theme: Theme = useTheme();
     const [value, setValue] = useState<string>('');
 
@@ -40,7 +39,6 @@ const SearchBox = ({disabled, onChange}: { disabled?: boolean, onChange: (value:
                 value={value}
                 sx={{width: '50%'}}
                 onChange={onValueChange}
-                disabled={disabled}
                 InputProps={{
                     style: {fontSize: 16, backgroundColor: theme.palette.background.paper},
                     endAdornment: isValueEmpty(value) ? <SearchIcon
