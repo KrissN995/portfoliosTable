@@ -21,13 +21,15 @@ import {
     GridApi,
     GridOptions,
     GridReadyEvent,
-    ICellRendererParams,
+    ICellRendererParams, RowClickedEvent,
+    RowSelectedEvent,
     ValueGetterParams,
 } from "ag-grid-community";
 import SearchBox from "../shared/SearchBox";
 import {fetchClientData} from "../../store/thunks/clientThunk";
 import {useAppDispatch} from "../../store/store";
 import {fetchCurrencyExchangeRates} from "../../store/thunks/currencyThunk";
+import {setClientDialogOpen, setSelectedClient} from "../../store/slices/clientSlice";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -44,11 +46,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const gridOptions: GridOptions = {
     defaultColDef: DefaultColDef,
-    enableCellChangeFlash: true,
+    rowSelection: "single",
     animateRows: true,
     pagination: true,
     paginationPageSize: 20,
-    enableCellTextSelection: false,
+    enableCellTextSelection: true,
     sideBar: DefaultSideBarDef,
     statusBar: DefaultStatusPanelDef,
     getRowId: (data) => {
@@ -138,27 +140,35 @@ const MainComponent = () => {
         gridApi?.setQuickFilter(value);
     };
 
+    const handleRowSelected = (rowSelected: RowClickedEvent) => {
+        if(!rowSelected.data)
+            return;
+
+        dispatch(setSelectedClient(rowSelected.data as Client));
+        dispatch(setClientDialogOpen(true));
+    }
+
     /**
      * Fetches the data and the currency exchange rates
      */
     useEffect(() => {
         dispatch(fetchClientData());
-        dispatch(fetchCurrencyExchangeRates('CHF'));
+       // dispatch(fetchCurrencyExchangeRates('CHF'));
     }, [dispatch]);
 
     /**
      * Sets the row data for the ag grid
      */
     useEffect(() => {
-        if (clientData && exchangeRates) {
-            console.log(exchangeRates);
+        if (clientData) {
+            //console.log(exchangeRates);
             setRowData(clientData.slice().sort(function (a, b) {
                 if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1;
                 if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1;
                 return 0;
             }));
         }
-    }, [clientData, exchangeRates])
+    }, [clientData])
 
     return (<Paper elevation={3} className={clsx(getGridTheme(isDarkTheme), classes.root)}>
         <div style={{display: 'flex', height: '4em', justifyContent: 'flex-end', alignItems: 'center'}}>
@@ -168,7 +178,7 @@ const MainComponent = () => {
             <AgGridReact gridOptions={gridOptions}
                          onGridReady={onGridReady}
                          columnDefs={getColumnDefs}
-                         serverSideInfiniteScroll={true}
+                         onRowClicked={handleRowSelected}
                          rowData={rowData}/>
         </Grid>
     </Paper>);

@@ -4,6 +4,7 @@ import {Grid, Theme} from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
 import Topbar from "../components/shared/Topbar";
 import MainComponent from "../components/main/MainComponent";
+import {ClientAdditionalInfoDialog} from "../components/main/ClientAdditionalInfoDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -32,6 +33,7 @@ const MainPage = () => {
             <Grid container className={classes.pageArea}>
                 <MainComponent/>
             </Grid>
+            <ClientAdditionalInfoDialog/>
         </Grid>
     </div>);
 

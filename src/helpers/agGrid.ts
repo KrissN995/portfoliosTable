@@ -27,12 +27,12 @@ export const calculateAggregatedValues = (data: Asset[], field: string, exchange
         let assetCapitalGain = asset.quantity * parseInt(asset.capitalGainPerAsset);
         let totalValuePerAsset = (asset.quantity * asset.valuePerAsset) + assetCapitalGain;
 
-        if (asset.currency !== exchangeRates.base) {
-            const exchangeRateForCurrency = Object.entries(exchangeRates.rates)?.filter(x => x.includes(asset.currency))[0];
-            const value = exchangeRateForCurrency[1];
-            assetCapitalGain = assetCapitalGain / value;
-            totalValuePerAsset = totalValuePerAsset / value;
-        }
+        // if (asset.currency !== exchangeRates.base) {
+        //     const exchangeRateForCurrency = Object.entries(exchangeRates.rates)?.filter(x => x.includes(asset.currency))[0];
+        //     const value = exchangeRateForCurrency[1];
+        //     assetCapitalGain = assetCapitalGain / value;
+        //     totalValuePerAsset = totalValuePerAsset / value;
+        // }
 
         portfolioAssociatedRisk += assetAssociatedRisk;
         portfolioCapitalGain += assetCapitalGain;
@@ -40,9 +40,9 @@ export const calculateAggregatedValues = (data: Asset[], field: string, exchange
     })
 
     let exchangeRateForClient = 1;
-    if (clientCurrency !== exchangeRates.base) {
-        exchangeRateForClient = Object.entries(exchangeRates.rates)?.filter(x => x.includes(clientCurrency))[0]?.[1];
-    }
+    // if (clientCurrency !== exchangeRates.base) {
+    //     exchangeRateForClient = Object.entries(exchangeRates.rates)?.filter(x => x.includes(clientCurrency))[0]?.[1];
+    // }
 
     switch (field) {
         case 'netWorth':
