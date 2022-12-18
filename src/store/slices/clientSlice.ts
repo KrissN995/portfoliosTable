@@ -1,13 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Client} from "../../models/appModels";
 
-export interface MainState {
-    clientData: Client[];
+export interface ClientState {
+    clientData?: Client[];
     errorMessage: string;
 }
 
-const initialState: MainState = {
-    clientData: [],
+const initialState: ClientState = {
     errorMessage: '',
 };
 

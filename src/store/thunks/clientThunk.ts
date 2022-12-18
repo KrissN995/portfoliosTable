@@ -1,10 +1,9 @@
-/**
- * Fetch all trades for the selected fund
- * @param fundId
- */
 import {ClientDataService} from "../../services/ClientDataService";
 import {setClientData, setErrorMessage} from "../slices/clientSlice";
 
+/**
+ * Fetch all client data
+ */
 export const fetchClientData: any = () => async (dispatch: any) => {
     try {
         const clientService = new ClientDataService();

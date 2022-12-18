@@ -10,15 +10,24 @@ import {
     DefaultSideBarDef,
     DefaultStatusPanelDef,
     getGridTheme,
-    valueFormatter
+    valueCellRenderer,
 } from "../../helpers/agGrid";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/slices/rootSlice";
 import {AgGridReact} from "ag-grid-react";
-import {ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, ValueGetterParams,} from "ag-grid-community";
+import {
+    ColDef,
+    ColGroupDef,
+    GridApi,
+    GridOptions,
+    GridReadyEvent,
+    ICellRendererParams,
+    ValueGetterParams,
+} from "ag-grid-community";
 import SearchBox from "../shared/SearchBox";
 import {fetchClientData} from "../../store/thunks/clientThunk";
 import {useAppDispatch} from "../../store/store";
+import {fetchCurrencyExchangeRates} from "../../store/thunks/currencyThunk";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -52,8 +61,9 @@ const MainComponent = () => {
     const dispatch = useAppDispatch();
     const {isDarkTheme} = useSelector((state: RootState) => state.app);
     const {clientData} = useSelector((state: RootState) => state.client);
+    const {exchangeRates} = useSelector((state: RootState) => state.currency);
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
-    const [rowData,setRowData]=useState<Client[]>([]);
+    const [rowData, setRowData] = useState<Client[]>([]);
 
     const getColumnDefs = useMemo((): (ColDef | ColGroupDef)[] => {
         return [
@@ -76,15 +86,15 @@ const MainComponent = () => {
                 minWidth: 80,
             },
             {
-                headerName: 'Aggregated Net Worth ',
+                headerName: 'Aggregated Net Worth',
                 field: 'clientId',
                 sortingOrder: (['asc', 'desc']),
                 type: 'numericColumn',
                 minWidth: 230,
                 valueGetter: (params: ValueGetterParams) => {
-                    return aggregateValues(params, 'netWorth')
+                    return aggregateValues(params, 'netWorth', exchangeRates)
                 },
-                valueFormatter: (params: any) => valueFormatter(params),
+                cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params)
             },
             {
                 headerName: 'Aggregated Restriction Status',
@@ -102,12 +112,12 @@ const MainComponent = () => {
                 type: 'numericColumn',
                 minWidth: 120,
                 valueGetter: (params: ValueGetterParams) => {
-                    return aggregateValues(params, 'capitalGain')
+                    return aggregateValues(params, 'capitalGain', exchangeRates)
                 },
-                valueFormatter: (params: any) => valueFormatter(params),
+                cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params)
             },
         ];
-    }, []);
+    }, [exchangeRates]);
 
     const onGridReady = (params: GridReadyEvent) => {
         setGridApi(params.api);
@@ -123,17 +133,19 @@ const MainComponent = () => {
 
     useEffect(() => {
         dispatch(fetchClientData());
+        dispatch(fetchCurrencyExchangeRates('CHF'));
     }, [dispatch]);
 
     useEffect(() => {
-        if (clientData) {
+        if (clientData && exchangeRates) {
+            console.log(exchangeRates);
             setRowData(clientData.slice().sort(function (a, b) {
                 if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1;
                 if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1;
                 return 0;
             }));
         }
-    }, [clientData])
+    }, [clientData, exchangeRates])
 
     return (<Paper elevation={3} className={clsx(getGridTheme(isDarkTheme), classes.root)}>
         <div style={{display: 'flex', height: '4em', justifyContent: 'flex-end', alignItems: 'center'}}>

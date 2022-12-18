@@ -2,43 +2,57 @@
  * Sets the ag-grid theme based on the selected theme in the app
  * @param isDark
  */
-import {SideBarDef, ValueFormatterParams, ValueGetterParams} from "ag-grid-community";
+import {ICellRendererParams, SideBarDef, ValueGetterParams} from "ag-grid-community";
 import {Asset} from "../models/appModels";
 import {capitalizeLetters, fiatNumberFormatter} from "./app";
+import {ExchangeRate} from "../models/currencyModels";
 
 export const getGridTheme = (isDark: boolean): string => {
     return isDark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine';
 };
-export const calculateAggregatedValues = (data: Asset[], field: string) => {
+export const calculateAggregatedValues = (data: Asset[], field: string, exchangeRates: ExchangeRate, clientCurrency: string) => {
     let portfolioAssociatedRisk: number = 0;
     let portfolioCapitalGain: number = 0;
     let portfolioSumTotalValue: number = 0;
     data.forEach((asset: Asset) => {
         const assetAssociatedRisk = asset.quantity * asset.associatedRiskPerAsset;
-        const assetCapitalGain = asset.quantity * parseInt(asset.capitalGainPerAsset);
-        const totalValue = (asset.quantity * asset.valuePerAsset) + assetCapitalGain;
+        let assetCapitalGain = asset.quantity * parseInt(asset.capitalGainPerAsset);
+        let totalValuePerAsset = (asset.quantity * asset.valuePerAsset) + assetCapitalGain;
+
+        if (asset.currency !== exchangeRates.base) {
+            const exchangeRateForCurrency = Object.entries(exchangeRates.rates)?.filter(x => x.includes(asset.currency))[0];
+            const value = exchangeRateForCurrency[1];
+            assetCapitalGain = assetCapitalGain / value;
+            totalValuePerAsset = totalValuePerAsset / value;
+        }
 
         portfolioAssociatedRisk += assetAssociatedRisk;
         portfolioCapitalGain += assetCapitalGain;
-        portfolioSumTotalValue += totalValue;
+        portfolioSumTotalValue += totalValuePerAsset;
     })
+
+    let exchangeRateForClient = 1;
+    if (clientCurrency !== exchangeRates.base) {
+        exchangeRateForClient = Object.entries(exchangeRates.rates)?.filter(x => x.includes(clientCurrency))[0]?.[1];
+    }
+
     switch (field) {
         case 'netWorth':
-            return portfolioCapitalGain + portfolioSumTotalValue;
+            return (portfolioCapitalGain + portfolioSumTotalValue) * exchangeRateForClient;
         case 'capitalGain':
-            return portfolioCapitalGain;
+            return portfolioCapitalGain * exchangeRateForClient;
         case 'associatedRisk':
-            return portfolioAssociatedRisk;
+            return portfolioAssociatedRisk * exchangeRateForClient;
         default:
             return 0;
     }
 }
-export const aggregateValues = (params: ValueGetterParams, field: string) => {
+export const aggregateValues = (params: ValueGetterParams, field: string, exchangeRates: ExchangeRate) => {
     if (params?.data && params.data.portfolios?.length > 0) {
         const allAssets = params.data.portfolios.flatMap((x: any) => x.assets);
         let value: number = 0;
         if (allAssets?.length > 0) {
-            value = calculateAggregatedValues(allAssets, field);
+            value = calculateAggregatedValues(allAssets, field, exchangeRates, params.data.currency);
         }
         return value;
     } else
@@ -54,15 +68,15 @@ export const aggregateRestrictionStatus = (params: ValueGetterParams) => {
 }
 
 /**
- * Cell formatter for formatting quantity
+ * Cell renderer for displaying the value and the currency
  * @param params
  */
-export const valueFormatter = (params: ValueFormatterParams) => {
-    if (params.value) {
-        return fiatNumberFormatter.format(params.value);
-    }
-    return params.value;
-};
+export const valueCellRenderer = (params: ICellRendererParams) => {
+    if (params && params.value && params.data) {
+        return `${fiatNumberFormatter.format(params.value)} ${params.data?.currency}`
+    } else
+        return 0;
+}
 
 export const DefaultColDef = {
     filter: true,
