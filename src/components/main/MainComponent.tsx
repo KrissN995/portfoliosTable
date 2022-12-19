@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Grid, Paper, Theme} from "@mui/material";
+import {Grid, Paper, Theme, useTheme} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import {Client} from "../../models/appModels";
+import {Client} from '../../models/appModels';
 import clsx from 'clsx';
 import {
     aggregateRestrictionStatus,
@@ -11,25 +11,24 @@ import {
     DefaultStatusPanelDef,
     getGridTheme,
     valueCellRenderer,
-} from "../../helpers/agGrid";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store/slices/rootSlice";
-import {AgGridReact} from "ag-grid-react";
+} from '../../helpers/agGrid';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/slices/rootSlice';
+import {AgGridReact} from 'ag-grid-react';
 import {
     ColDef,
     ColGroupDef,
     GridApi,
     GridOptions,
     GridReadyEvent,
-    ICellRendererParams, RowClickedEvent,
-    RowSelectedEvent,
+    ICellRendererParams,
+    RowClickedEvent,
     ValueGetterParams,
-} from "ag-grid-community";
-import SearchBox from "../shared/SearchBox";
-import {fetchClientData} from "../../store/thunks/clientThunk";
-import {useAppDispatch} from "../../store/store";
-import {fetchCurrencyExchangeRates} from "../../store/thunks/currencyThunk";
-import {setClientDialogOpen, setSelectedClient} from "../../store/slices/clientSlice";
+} from 'ag-grid-community';
+import SearchBox from '../shared/SearchBox';
+import {fetchClientData} from '../../store/thunks/clientThunk';
+import {useAppDispatch} from '../../store/store';
+import {setClientDialogOpen, setSelectedClient} from '../../store/slices/clientSlice';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const gridOptions: GridOptions = {
     defaultColDef: DefaultColDef,
-    rowSelection: "single",
+    rowSelection: 'single',
     animateRows: true,
     pagination: true,
     paginationPageSize: 20,
@@ -59,6 +58,7 @@ const gridOptions: GridOptions = {
 };
 
 const MainComponent = () => {
+    const theme = useTheme();
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {isDarkTheme} = useSelector((state: RootState) => state.app);
@@ -77,6 +77,9 @@ const MainComponent = () => {
                 field: 'clientId',
                 sortingOrder: (['asc', 'desc']),
                 minWidth: 145,
+                tooltipField: 'clientId',
+                tooltipComponentParams: {color: theme.palette.background.paper},
+                cellStyle: {cursor: 'pointer'},
                 valueGetter: (params: ValueGetterParams) => {
                     if (params.data) {
                         return `${params.data.firstName ?? ''} ${params.data.lastName ?? ''}`;
@@ -97,7 +100,7 @@ const MainComponent = () => {
                 type: 'numericColumn',
                 minWidth: 230,
                 valueGetter: (params: ValueGetterParams) => {
-                    return aggregateValues(params, 'netWorth', exchangeRates)
+                    return aggregateValues(params, 'netWorth', exchangeRates);
                 },
                 cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params)
             },
@@ -107,7 +110,7 @@ const MainComponent = () => {
                 sortingOrder: (['asc', 'desc']),
                 minWidth: 120,
                 valueGetter: (params: ValueGetterParams) => {
-                    return aggregateRestrictionStatus(params)
+                    return aggregateRestrictionStatus(params);
                 }
             },
             {
@@ -117,12 +120,12 @@ const MainComponent = () => {
                 type: 'numericColumn',
                 minWidth: 120,
                 valueGetter: (params: ValueGetterParams) => {
-                    return aggregateValues(params, 'capitalGain', exchangeRates)
+                    return aggregateValues(params, 'capitalGain', exchangeRates);
                 },
                 cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params)
             },
         ];
-    }, [exchangeRates]);
+    }, [exchangeRates, theme]);
 
     /**
      * Sets the gridApi
@@ -141,19 +144,19 @@ const MainComponent = () => {
     };
 
     const handleRowSelected = (rowSelected: RowClickedEvent) => {
-        if(!rowSelected.data)
+        if (!rowSelected.data)
             return;
 
         dispatch(setSelectedClient(rowSelected.data as Client));
         dispatch(setClientDialogOpen(true));
-    }
+    };
 
     /**
      * Fetches the data and the currency exchange rates
      */
     useEffect(() => {
         dispatch(fetchClientData());
-       // dispatch(fetchCurrencyExchangeRates('CHF'));
+        // dispatch(fetchCurrencyExchangeRates('CHF'));
     }, [dispatch]);
 
     /**
@@ -168,7 +171,7 @@ const MainComponent = () => {
                 return 0;
             }));
         }
-    }, [clientData])
+    }, [clientData]);
 
     return (<Paper elevation={3} className={clsx(getGridTheme(isDarkTheme), classes.root)}>
         <div style={{display: 'flex', height: '4em', justifyContent: 'flex-end', alignItems: 'center'}}>
@@ -179,6 +182,8 @@ const MainComponent = () => {
                          onGridReady={onGridReady}
                          columnDefs={getColumnDefs}
                          onRowClicked={handleRowSelected}
+                         tooltipShowDelay={0}
+                         tooltipHideDelay={2000}
                          rowData={rowData}/>
         </Grid>
     </Paper>);

@@ -2,6 +2,7 @@ import {ICellRendererParams, SideBarDef, ValueGetterParams} from "ag-grid-commun
 import {Asset} from "../models/appModels";
 import {capitalizeLetters, fiatNumberFormatter} from "./app";
 import {ExchangeRate} from "../models/currencyModels";
+import CustomTooltip from '../components/cellRenderers/TooltipCellRenderer';
 
 /**
  * Sets the ag-grid theme based on the selected theme in the app
@@ -103,6 +104,7 @@ export const DefaultColDef = {
     sortable: true,
     display: 'flex',
     flex: 1,
+    tooltipComponent: CustomTooltip
 };
 
 export const DefaultSideBarDef: SideBarDef = {
