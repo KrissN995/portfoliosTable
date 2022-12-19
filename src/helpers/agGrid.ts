@@ -98,6 +98,7 @@ export const valueCellRenderer = (params: ICellRendererParams) => {
         return 0;
 }
 
+
 export const DefaultColDef = {
     filter: true,
     resizable: true,

@@ -1,12 +1,12 @@
 import React, {ReactElement, Ref} from 'react';
 import {TransitionProps} from "@mui/material/transitions";
-import {Dialog, DialogContent, DialogTitle, IconButton, Paper, PaperProps, Slide, Typography} from "@mui/material";
+import {Dialog, DialogContent, DialogTitle, IconButton, Slide, Typography} from "@mui/material";
 import {useAppDispatch} from "../../store/store";
 import {setClientDialogOpen, setSelectedClient} from "../../store/slices/clientSlice";
 import CloseIcon from '@mui/icons-material/Close';
-import Draggable from 'react-draggable';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/slices/rootSlice";
+import PortfoliosComponent from "./PortfoliosComponent";
 
 const transitionMethod = (props: TransitionProps & { children: ReactElement<any, any> }, ref: Ref<unknown>) => {
     // eslint-disable-next-line react/jsx-props-no-spreading
@@ -14,15 +14,6 @@ const transitionMethod = (props: TransitionProps & { children: ReactElement<any,
 };
 
 const Transition = React.forwardRef(transitionMethod);
-
-const PaperComponent = (props: PaperProps) => {
-    return (
-        <Draggable handle="#form-dialog-client-data" cancel={'[class*=\'MuiDialogContent-root\']'}>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <Paper {...props} />
-        </Draggable>
-    );
-};
 
 export const ClientAdditionalInfoDialog = () => {
     const dispatch = useAppDispatch();
@@ -35,8 +26,8 @@ export const ClientAdditionalInfoDialog = () => {
 
     return (
         <Dialog open={clientDialogOpen && selectedClient !== null} TransitionComponent={Transition}
-                PaperComponent={PaperComponent}
-                maxWidth="lg">
+                maxWidth={'lg'}
+                fullWidth>
             <DialogTitle sx={{
                 cursor: 'move',
                 display: 'flex',
@@ -51,7 +42,8 @@ export const ClientAdditionalInfoDialog = () => {
                     <CloseIcon/>
                 </IconButton>
             </DialogTitle>
-            <DialogContent>
+            <DialogContent sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
+                {selectedClient && <PortfoliosComponent selectedClient={selectedClient}/>}
             </DialogContent>
         </Dialog>
     );

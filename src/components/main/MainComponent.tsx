@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Grid, Paper, Theme, useTheme} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Client} from '../../models/appModels';
@@ -92,6 +92,9 @@ const MainComponent = () => {
                 field: 'riskProfile',
                 sortingOrder: (['asc', 'desc']),
                 minWidth: 80,
+                tooltipField: 'riskProfile',
+                tooltipComponentParams: {color: theme.palette.background.paper},
+                cellStyle: {cursor: 'pointer'},
             },
             {
                 headerName: 'Aggregated Net Worth',
@@ -102,7 +105,10 @@ const MainComponent = () => {
                 valueGetter: (params: ValueGetterParams) => {
                     return aggregateValues(params, 'netWorth', exchangeRates);
                 },
-                cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params)
+                cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params),
+                tooltipField: 'clientId',
+                tooltipComponentParams: {color: theme.palette.background.paper},
+                cellStyle: {cursor: 'pointer'},
             },
             {
                 headerName: 'Aggregated Restriction Status',
@@ -111,7 +117,10 @@ const MainComponent = () => {
                 minWidth: 120,
                 valueGetter: (params: ValueGetterParams) => {
                     return aggregateRestrictionStatus(params);
-                }
+                },
+                tooltipField: 'clientId',
+                tooltipComponentParams: {color: theme.palette.background.paper},
+                cellStyle: {cursor: 'pointer'},
             },
             {
                 headerName: 'Aggregated Capital Gain',
@@ -122,8 +131,12 @@ const MainComponent = () => {
                 valueGetter: (params: ValueGetterParams) => {
                     return aggregateValues(params, 'capitalGain', exchangeRates);
                 },
-                cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params)
+                cellRenderer: (params: ICellRendererParams) => valueCellRenderer(params),
+                tooltipField: 'clientId',
+                tooltipComponentParams: {color: theme.palette.background.paper},
+                cellStyle: {cursor: 'pointer'},
             },
+
         ];
     }, [exchangeRates, theme]);
 
@@ -131,9 +144,9 @@ const MainComponent = () => {
      * Sets the gridApi
      * @param params
      */
-    const onGridReady = (params: GridReadyEvent) => {
+    const onGridReady = useCallback((params: GridReadyEvent) => {
         setGridApi(params.api);
-    };
+    }, []);
 
     /**
      * Filters the grid data based on the passed value
