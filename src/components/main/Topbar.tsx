@@ -7,8 +7,10 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store/slices/rootSlice';
 import {AppBar, Grid, IconButton, Theme, Tooltip} from '@mui/material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import {setIsDarkTheme} from "../../store/slices/appSlice";
+import {setIsDarkTheme, setIsDrawerOpen} from "../../store/slices/appSlice";
 import makeStyles from "@mui/styles/makeStyles";
+import clsx from "clsx";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const useStyles = makeStyles((theme: Theme) =>
     ({
@@ -24,6 +26,12 @@ const useStyles = makeStyles((theme: Theme) =>
             }),
         },
         appBarSpacer: theme.mixins.toolbar,
+        menuButton: {
+            marginRight: theme.spacing(2),
+        },
+        menuButtonHidden: {
+            display: 'none',
+        },
     })
 );
 
@@ -33,6 +41,8 @@ const TopBarComponent = () => {
     const dispatch = useAppDispatch();
     const {
         isDarkTheme,
+        drawerOpen,
+        topBarTitle
     } = useSelector((state: RootState) => state.app);
 
     /**
@@ -41,6 +51,10 @@ const TopBarComponent = () => {
     const handleThemeChange = () => {
         dispatch(setIsDarkTheme(!isDarkTheme));
     }
+
+    const handleDrawerOpen = () => {
+        dispatch(setIsDrawerOpen(true));
+    };
 
     return <AppBar position="absolute" className={classes.appBar}
                    sx={{backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary}}>
@@ -52,9 +66,18 @@ const TopBarComponent = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center'
             }}>
-                <Grid item xs={10}>
+                <Grid item xs={10} sx={{display: 'flex', alignItems: 'center', justifyContent: 'start', flex: 1}}>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        className={clsx(classes.menuButton, drawerOpen && classes.menuButtonHidden)}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
                     <Typography variant="h6" noWrap>
-                        Customers Portfolios
+                        {topBarTitle}
                     </Typography>
                 </Grid>
                 <Grid item xs={2} sx={{display: 'flex', alignItems: 'center', justifyContent: 'end', flex: 1}}>

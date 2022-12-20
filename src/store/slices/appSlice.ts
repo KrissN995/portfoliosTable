@@ -3,11 +3,13 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 export interface MainState {
     drawerOpen: boolean;
     isDarkTheme: boolean;
+    topBarTitle:string;
 }
 
 const initialState: MainState = {
     drawerOpen: false,
     isDarkTheme: true,
+    topBarTitle:''
 };
 
 const appSlice = createSlice({
@@ -30,12 +32,21 @@ const appSlice = createSlice({
         setIsDrawerOpen(state, action: PayloadAction<boolean>) {
             state.drawerOpen = action.payload;
         },
+        /**
+         * Set's the title that is displayed in the topBar
+         * @param state
+         * @param action
+         */
+        setTopBarTitle(state, action: PayloadAction<string>) {
+            state.topBarTitle = action.payload;
+        },
     }
 });
 
 export const {
     setIsDarkTheme,
-    setIsDrawerOpen
+    setIsDrawerOpen,
+    setTopBarTitle
 } = appSlice.actions;
 
 export default appSlice.reducer;

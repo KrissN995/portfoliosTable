@@ -2,16 +2,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
 import {Grid, Theme} from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
-import Topbar from "../components/shared/Topbar";
-import MainComponent from "../components/main/MainComponent";
-import {ClientAdditionalInfoDialog} from "../components/main/ClientAdditionalInfoDialog";
+import Topbar from "../components/main/Topbar";
+import {RoutesSwitch} from "../router/Routes";
+import {useAppDispatch} from "../store/store";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/slices/rootSlice";
+import {setIsDrawerOpen} from "../store/slices/appSlice";
+import Sidebar from "../components/main/Sidebar";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: 'flex',
         height: '100vh',
     },
-    appBarSpacer: theme.mixins.toolbar,
     content: {
         flex: 1,
     },
@@ -24,16 +27,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const MainPage = () => {
     const classes = useStyles();
+    const dispatch = useAppDispatch();
+    const {
+        drawerOpen,
+    } = useSelector((state: RootState) => state.app);
 
     return (<div className={classes.root}>
         <CssBaseline/>
-        <Topbar/>
-        <Grid container direction='column' className={classes.content}>
-            <Grid className={classes.appBarSpacer}/>
+        <div onBlur={() => drawerOpen ? dispatch(setIsDrawerOpen(!drawerOpen)) : null}>
+            <Topbar/>
+            <Sidebar/>
+        </div>
+        <Grid container direction="column" className={classes.content}>
             <Grid container className={classes.pageArea}>
-                <MainComponent/>
+                <RoutesSwitch/>
             </Grid>
-            <ClientAdditionalInfoDialog/>
         </Grid>
     </div>);
 
