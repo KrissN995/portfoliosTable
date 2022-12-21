@@ -19,6 +19,9 @@ export const ClientAdditionalInfoDialog = () => {
     const dispatch = useAppDispatch();
     const {selectedClient, clientDialogOpen} = useSelector((state: RootState) => state.client);
 
+    /**
+     * Handles the closing of the dialog
+     */
     const handleClose = () => {
         dispatch(setSelectedClient(null));
         dispatch(setClientDialogOpen(false));

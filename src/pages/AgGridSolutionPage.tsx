@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Grid, Theme} from "@mui/material";
+import {Theme} from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
 import {ClientAdditionalInfoDialog} from "../components/aggridSolutionComponents/ClientAdditionalInfoDialog";
 import {useAppDispatch} from "../store/store";
@@ -9,16 +9,7 @@ import AgGridMainComponent from "../components/aggridSolutionComponents/AgGridMa
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: 'flex',
-        flex:1,
-    },
-    appBarSpacer: theme.mixins.toolbar,
-    content: {
         flex: 1,
-    },
-    pageArea: {
-        flex: 1,
-        overflow: 'auto',
-        padding: theme.spacing(1)
     },
 }));
 
@@ -26,18 +17,16 @@ const AgGridSolutionPage = () => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
+    /**
+     * Sets the title for the page in the topBar component
+     */
     useEffect(() => {
         dispatch(setTopBarTitle("Customers portfolios with AG Grid"));
     }, [dispatch])
 
     return (<div className={classes.root}>
-        <Grid container direction='column' className={classes.content}>
-            <Grid className={classes.appBarSpacer}/>
-            <Grid container className={classes.pageArea}>
-                <AgGridMainComponent/>
-            </Grid>
-            <ClientAdditionalInfoDialog/>
-        </Grid>
+        <AgGridMainComponent/>
+        <ClientAdditionalInfoDialog/>
     </div>);
 
 };

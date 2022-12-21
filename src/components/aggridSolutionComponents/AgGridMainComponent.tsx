@@ -157,6 +157,10 @@ const AgGridMainComponent = () => {
         gridApi?.setQuickFilter(value);
     };
 
+    /**
+     * Handles when we select a row to open the dilaog with additional info cause row grouping is only allowed in Ag Grid enterprisee
+     * @param rowSelected
+     */
     const handleRowSelected = (rowSelected: RowClickedEvent) => {
         if (!rowSelected.data)
             return;
@@ -164,6 +168,7 @@ const AgGridMainComponent = () => {
         dispatch(setSelectedClient(rowSelected.data as Client));
         dispatch(setClientDialogOpen(true));
     };
+
 
     /**
      * Fetches the data and the currency exchange rates
@@ -185,7 +190,7 @@ const AgGridMainComponent = () => {
                 return 0;
             }));
         }
-    }, [clientData,exchangeRates]);
+    }, [clientData, exchangeRates]);
 
     return (<Paper elevation={3} className={clsx(getGridTheme(isDarkTheme), classes.root)}>
         <div style={{display: 'flex', height: '4em', justifyContent: 'flex-end', alignItems: 'center'}}>

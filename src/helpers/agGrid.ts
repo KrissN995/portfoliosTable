@@ -108,6 +108,7 @@ export const DefaultColDef = {
     tooltipComponent: CustomTooltip
 };
 
+//Note: this are visible only in the AG Grid enterprise in the free version we can not use them
 export const DefaultSideBarDef: SideBarDef = {
     toolPanels: [
         {

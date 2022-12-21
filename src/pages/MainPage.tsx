@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     content: {
         flex: 1,
     },
+    appBarSpacer: theme.mixins.toolbar,
     pageArea: {
         flex: 1,
         overflow: 'auto',
@@ -39,6 +40,7 @@ const MainPage = () => {
             <Sidebar/>
         </div>
         <Grid container direction="column" className={classes.content}>
+            <Grid className={classes.appBarSpacer}/>
             <Grid container className={classes.pageArea}>
                 <RoutesSwitch/>
             </Grid>

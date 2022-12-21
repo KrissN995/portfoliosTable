@@ -73,24 +73,30 @@ const SideBar = () => {
         drawerOpen,
     } = useSelector((state: RootState) => state.app);
 
-    const handleNavigation=(url:string)=>{
+    /**
+     * Closes the navigation menu and navigates to the specific url
+     * @param url
+     */
+    const handleNavigation = (url: string) => {
         dispatch(setIsDrawerOpen(false));
         navigate(url);
     }
     return <Drawer variant="permanent"
                    open={drawerOpen}
-                   sx={{ '& .MuiDrawer-paper': {
+                   sx={{
+                       '& .MuiDrawer-paper': {
                            backgroundColor: theme.palette.background.paper,
                            color: theme.palette.text.primary,
 
-                       }}}>
+                       }
+                   }}>
         <DrawerHeader>
             <IconButton onClick={() => dispatch(setIsDrawerOpen(!drawerOpen))}>
                 {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
             </IconButton>
         </DrawerHeader>
         <Divider/>
-        <List sx={{marginTop:'1em'}}>
+        <List sx={{marginTop: '1em'}}>
             {routes?.map((route, index) => (
                 <ListItem key={route.key} disablePadding sx={{display: 'block'}}
                           onClick={() => handleNavigation(route.url)}>
@@ -108,7 +114,8 @@ const SideBar = () => {
                                 justifyContent: 'center',
                             }}>
                             {
-                                index % 2 === 0 ? <Tooltip title={'Home'}><HomeIcon/></Tooltip> : <Tooltip title={"Ag Grid Solution Example"}><TableChartIcon/></Tooltip>
+                                index % 2 === 0 ? <Tooltip title={'Home'}><HomeIcon/></Tooltip> :
+                                    <Tooltip title={"Ag Grid Solution Example"}><TableChartIcon/></Tooltip>
                             }
                         </ListItemIcon>
                         <ListItemText primary={route.key} sx={{opacity: drawerOpen ? 1 : 0}}/>

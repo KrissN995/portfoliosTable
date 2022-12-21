@@ -184,6 +184,10 @@ const PortfolioCard = ({portfolio, expanded}: PortfolioCardProps) => {
             return;
     }, [gridApi]);
 
+    /**
+     * Sets columns to fit on first rendered and when gridApi is defined
+     * @param params
+     */
     const onFirstDataRendered = useCallback((params: FirstDataRenderedEvent) => {
         if (gridApi) {
             gridApi.sizeColumnsToFit();
@@ -191,6 +195,9 @@ const PortfolioCard = ({portfolio, expanded}: PortfolioCardProps) => {
             return;
     }, [gridApi]);
 
+    /**
+     * Sets the assets data for the selected portfolio
+     */
     useEffect(() => {
         if (!expanded)
             return;

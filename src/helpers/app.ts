@@ -39,6 +39,12 @@ export const capitalizeLetters = (value: string): string | undefined => {
     }
 };
 
+/**
+ * Sorts the array based on the sortBy parameter and the order is based on sortOrder and returns the sorted array
+ * @param array
+ * @param sortOrder
+ * @param sortBy
+ */
 export const stableSort = (array: any[], sortOrder: Order, sortBy: string) => {
     return orderBy(array, [sortBy], [sortOrder]);
 }

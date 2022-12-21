@@ -52,6 +52,9 @@ const TopBarComponent = () => {
         dispatch(setIsDarkTheme(!isDarkTheme));
     }
 
+    /**
+     * Changes the state of the drawer (the menu on the left)
+     */
     const handleDrawerOpen = () => {
         dispatch(setIsDrawerOpen(true));
     };
