@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Grid, Paper, Theme, useTheme} from '@mui/material';
+import {Alert, Grid, Paper, Snackbar, Theme, useTheme} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {Client} from '../../models/appModels';
 import clsx from 'clsx';
@@ -28,7 +28,7 @@ import {
 import SearchBox from '../shared/SearchBox';
 import {fetchClientData} from '../../store/thunks/clientThunk';
 import {useAppDispatch} from '../../store/store';
-import {setClientDialogOpen, setSelectedClient} from '../../store/slices/clientSlice';
+import {setClientDialogOpen, setErrorMessage, setSelectedClient} from '../../store/slices/clientSlice';
 import {fetchCurrencyExchangeRates} from "../../store/thunks/currencyThunk";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,6 +41,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     grid: {
         flex: 1,
         marginTop: '2em'
+    },
+    snackbar: {
+        width: '100%',
+        marginTop: '8em',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
     },
 }));
 
@@ -63,7 +70,7 @@ const AgGridMainComponent = () => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {isDarkTheme} = useSelector((state: RootState) => state.app);
-    const {clientData} = useSelector((state: RootState) => state.client);
+    const {clientData, errorMessage} = useSelector((state: RootState) => state.client);
     const {exchangeRates} = useSelector((state: RootState) => state.currency);
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
     const [rowData, setRowData] = useState<Client[]>([]);
@@ -169,6 +176,12 @@ const AgGridMainComponent = () => {
         dispatch(setClientDialogOpen(true));
     };
 
+    /**
+     * Closes the error message snackbar
+     */
+    const handleClose = () => {
+        dispatch(setErrorMessage(''));
+    };
 
     /**
      * Fetches the data and the currency exchange rates
@@ -205,6 +218,16 @@ const AgGridMainComponent = () => {
                          tooltipHideDelay={2000}
                          rowData={rowData}/>
         </Grid>
+        {errorMessage && errorMessage.length > 0 &&
+            <div className={classes.snackbar}>
+                <Snackbar open={errorMessage?.length > 0} autoHideDuration={1500} onClose={handleClose}
+                          anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                    <Alert onClose={handleClose} severity="error">
+                        {errorMessage}
+                    </Alert>
+                </Snackbar>
+            </div>
+        }
     </Paper>);
 
 };

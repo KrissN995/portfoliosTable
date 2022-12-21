@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {
-    Paper,
+    Alert,
+    Paper, Snackbar,
     Table,
     TableBody,
     TableCell,
@@ -24,6 +25,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import {aggregateRestrictionStatus, aggregateValues} from "../../helpers/calculations";
 import Row from "./ClientRowComponent";
 import {fetchCurrencyExchangeRates} from "../../store/thunks/currencyThunk";
+import {setErrorMessage} from "../../store/slices/clientSlice";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -32,13 +34,20 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: 'column',
         width: '100%'
     },
+    snackbar: {
+        width: '100%',
+        marginTop: '8em',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    },
 }));
 
 export const CollapsibleTable = () => {
     const dispatch = useAppDispatch();
     const classes = useStyles();
     const {isDarkTheme} = useSelector((state: RootState) => state.app);
-    const {clientData} = useSelector((state: RootState) => state.client);
+    const {clientData, errorMessage} = useSelector((state: RootState) => state.client);
     const {exchangeRates} = useSelector((state: RootState) => state.currency);
     const [rowData, setRowData] = useState<ClientExtended[]>([]);
     const [sortDirection, setSortDirection] = useState<Order>('asc');
@@ -71,6 +80,13 @@ export const CollapsibleTable = () => {
                 return 0;
             }) ?? []);
         }
+    };
+
+    /**
+     * Closes the error message snackbar
+     */
+    const handleClose = () => {
+        dispatch(setErrorMessage(''));
     };
 
     /**
@@ -171,6 +187,16 @@ export const CollapsibleTable = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {errorMessage && errorMessage.length > 0 &&
+                <div className={classes.snackbar}>
+                    <Snackbar open={errorMessage?.length > 0} autoHideDuration={1500} onClose={handleClose}
+                              anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                        <Alert onClose={handleClose} severity="error">
+                            {errorMessage}
+                        </Alert>
+                    </Snackbar>
+                </div>
+            }
         </Paper>
     );
 }
