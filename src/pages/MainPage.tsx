@@ -2,13 +2,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
 import {Grid, Theme} from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
-import Topbar from "../components/main/Topbar";
 import {RoutesSwitch} from "../router/Routes";
 import {useAppDispatch} from "../store/store";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/slices/rootSlice";
 import {setIsDrawerOpen} from "../store/slices/appSlice";
 import Sidebar from "../components/main/Sidebar";
+import {Topbar} from "../components/main/Topbar";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

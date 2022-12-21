@@ -157,14 +157,14 @@ const Row = (props: { row: ClientExtended }) => {
 
     return (
         <React.Fragment>
-            <TableRow sx={{borderBottom: '1px solid'}}>
+            <TableRow sx={{borderBottom: '1px solid'}} aria-label={'client-data-row'}>
                 <TableCell component="th" scope="row">
                     <IconButton
                         aria-label="expand row"
                         size="small"
                         onClick={() => handleClick(row)}
                     >
-                        {open ? <KeyboardArrowDownIcon/> : <KeyboardArrowRightIcon/>}
+                        {open ? <KeyboardArrowDownIcon aria-label={'up icon first btn'}/> : <KeyboardArrowRightIcon aria-label={'right icon first btn'}/>}
                     </IconButton>{`${row.firstName ?? ''} ${row.lastName ?? ''}`}
                 </TableCell>
                 <TableCell align="right">{row.riskProfile}</TableCell>
@@ -176,20 +176,20 @@ const Row = (props: { row: ClientExtended }) => {
             </TableRow>
             <TableRow sx={{width: '100%'}}>
                 <TableCell sx={{paddingBottom: 0, paddingTop: 0, width: '100%'}} colSpan={7}>
-                    <Collapse in={open && selectedRow === row} timeout="auto" sx={{width: '100%'}} unmountOnExit>
+                    <Collapse in={open && selectedRow === row} timeout="auto" sx={{width: '100%'}} unmountOnExit arial-label={'portfolio inner data'}>
                         {row.portfolios.map((portfolioRow: Portfolio) => (
                             <Grid container key={`portfolio-card-${portfolioRow.portfolioId}`} sx={{paddingTop: '1em'}}>
                                 <Grid item container sx={{display: 'flex', alignItems: 'center'}}>
                                     <Typography
                                         variant={'body1'}>{`${capitalizeLetters(portfolioRow.portfolioName)} :: ${capitalizeLetters(portfolioRow.restrictionStatus)}`}</Typography>
                                     <IconButton
-                                        aria-label="expand row"
+                                        aria-label="expand inner row"
                                         key={`icon-${portfolioRow.portfolioId}`}
                                         size="small"
                                         onClick={() => handleClickInner(portfolioRow)}
                                     >
                                         {portfoliosExpandedState[`${portfolioRow.portfolioId}`] ? (
-                                            <KeyboardArrowDownIcon/>
+                                            <KeyboardArrowDownIcon />
                                         ) : (
                                             <KeyboardArrowRightIcon/>
                                         )}

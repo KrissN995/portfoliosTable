@@ -14,10 +14,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const useStyles = makeStyles((theme: Theme) =>
     ({
-        toolbar: {
-            flex: 1,
-            paddingRight: 5
-        },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
             transition: theme.transitions.create(['width', 'margin'], {
@@ -25,7 +21,6 @@ const useStyles = makeStyles((theme: Theme) =>
                 duration: theme.transitions.duration.leavingScreen,
             }),
         },
-        appBarSpacer: theme.mixins.toolbar,
         menuButton: {
             marginRight: theme.spacing(2),
         },
@@ -35,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const TopBarComponent = () => {
-    const theme = useTheme();
+export const Topbar = () => {
+    const theme:Theme = useTheme();
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {
@@ -79,7 +74,7 @@ const TopBarComponent = () => {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap aria-label={'title'}>
                         {topBarTitle}
                     </Typography>
                 </Grid>
@@ -95,4 +90,3 @@ const TopBarComponent = () => {
     </AppBar>;
 };
 
-export default TopBarComponent;

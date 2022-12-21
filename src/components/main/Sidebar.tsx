@@ -99,7 +99,8 @@ const SideBar = () => {
         <List sx={{marginTop: '1em'}}>
             {routes?.map((route, index) => (
                 <ListItem key={route.key} disablePadding sx={{display: 'block'}}
-                          onClick={() => handleNavigation(route.url)}>
+                          onClick={() => handleNavigation(route.url)}
+                aria-label={route.key}>
                     <ListItemButton
                         sx={{
                             minHeight: 48,

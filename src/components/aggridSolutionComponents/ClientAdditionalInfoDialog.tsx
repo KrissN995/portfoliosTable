@@ -30,7 +30,8 @@ export const ClientAdditionalInfoDialog = () => {
     return (
         <Dialog open={clientDialogOpen && selectedClient !== null} TransitionComponent={Transition}
                 maxWidth={'lg'}
-                fullWidth>
+                fullWidth
+                aria-label={'dialog extra data client'}>
             <DialogTitle sx={{
                 cursor: 'move',
                 display: 'flex',

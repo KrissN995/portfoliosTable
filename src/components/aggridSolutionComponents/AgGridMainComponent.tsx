@@ -209,7 +209,7 @@ const AgGridMainComponent = () => {
         <div style={{display: 'flex', height: '4em', justifyContent: 'flex-end', alignItems: 'center'}}>
             <SearchBox onChange={onSearchBoxChange}/>
         </div>
-        <Grid item className={clsx(getGridTheme(isDarkTheme), classes.grid)}>
+        <Grid item className={clsx(getGridTheme(isDarkTheme), classes.grid)} aria-label={'agGrid component'}>
             <AgGridReact gridOptions={gridOptions}
                          onGridReady={onGridReady}
                          columnDefs={getColumnDefs}

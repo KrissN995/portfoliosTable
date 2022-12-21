@@ -133,7 +133,7 @@ export const CollapsibleTable = () => {
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>
+                            <TableCell aria-label={'clientNameHeader'}>
                                 <TableSortLabel
                                     active={sortColumn === 'firstName'}
                                     direction={sortDirection}
@@ -142,7 +142,7 @@ export const CollapsibleTable = () => {
                                     Client Name
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell align="right" aria-label={'riskProfileHeader'}>
                                 <TableSortLabel
                                     active={sortColumn === 'riskProfile'}
                                     direction={sortDirection}
@@ -151,7 +151,7 @@ export const CollapsibleTable = () => {
                                     Risk Profile
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell align="right" aria-label={'clientAggregatedNetWorthHeader'}>
                                 <TableSortLabel
                                     active={sortColumn === 'clientAggregatedNetWorth'}
                                     direction={sortDirection}
@@ -160,7 +160,7 @@ export const CollapsibleTable = () => {
                                     Aggregated Net Worth
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell align="right" aria-label={'clientAggregatedRestrictionStatusHeader'}>
                                 <TableSortLabel
                                     active={sortColumn === 'clientAggregatedRestrictionStatus'}
                                     direction={sortDirection}
@@ -169,7 +169,7 @@ export const CollapsibleTable = () => {
                                     Aggregated Restriction Status
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell align="right" aria-label={'clientAggregatedCapitalGainHeader'}>
                                 <TableSortLabel
                                     active={sortColumn === 'clientAggregatedCapitalGain'}
                                     direction={sortDirection}
