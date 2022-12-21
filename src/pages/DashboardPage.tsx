@@ -1,17 +1,16 @@
 import React, {useEffect} from 'react';
 import {Grid, Theme} from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
-import MainComponent from "../components/main/MainComponent";
-import {ClientAdditionalInfoDialog} from "../components/aggridSolutionComponents/ClientAdditionalInfoDialog";
 import {setTopBarTitle} from "../store/slices/appSlice";
 import {useAppDispatch} from "../store/store";
+import { CollapsibleTable } from "../components/home/HomeComponent";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: 'flex',
         flex: 1,
-        height: '100vh',
     },
+    appBarSpacer: theme.mixins.toolbar,
     content: {
         flex: 1,
     },
@@ -32,10 +31,10 @@ const DashboardPage = () => {
 
     return (<div className={classes.root}>
         <Grid container direction='column' className={classes.content}>
+            <Grid className={classes.appBarSpacer}/>
             <Grid container className={classes.pageArea}>
-                <MainComponent/>
+                <CollapsibleTable/>
             </Grid>
-            <ClientAdditionalInfoDialog/>
         </Grid>
     </div>);
 

@@ -68,7 +68,7 @@ const PortfolioCard = ({portfolio, expanded}: PortfolioCardProps) => {
         if (params && params.value) {
             return <div>
                 <CountryFlag countryCode={params.value}/>
-                <span style={{paddingLeft:'0.5em'}}>{params.value}</span>
+                <span style={{paddingLeft: '0.5em'}}>{params.value}</span>
             </div>
         } else
             return <></>;
@@ -122,7 +122,7 @@ const PortfolioCard = ({portfolio, expanded}: PortfolioCardProps) => {
                 minWidth: 120,
                 valueGetter: (params: ValueGetterParams) => {
                     if (params.data) {
-                        return (params.data.quantity * params.data.valuePerAsset) + +params.data.capitalGainPerAsset;
+                        return (params.data.quantity * params.data.valuePerAsset) + (params.data.quantity * +params.data.capitalGainPerAsset);
                     } else
                         return '';
                 },

@@ -8,6 +8,9 @@ export interface Asset {
     valuePerAsset: number;
     capitalGainPerAsset: string;
     associatedRiskPerAsset: number;
+    assetTotalValue?: number;
+    assetCapitalGain?: number;
+    assetRisk?: number
 }
 
 export interface Portfolio {
@@ -27,4 +30,7 @@ export interface Client {
     currency: string;
     clientType: string;
     portfolios: Portfolio[];
+    clientAggregatedNetWorth?: number;
+    clientAggregatedCapitalGain?: number;
+    clientAggregatedRestrictionStatus?: any;
 }
