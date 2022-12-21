@@ -30,7 +30,12 @@ export interface Client {
     currency: string;
     clientType: string;
     portfolios: Portfolio[];
+}
+
+export interface ClientExtended extends  Client{
     clientAggregatedNetWorth?: number;
     clientAggregatedCapitalGain?: number;
     clientAggregatedRestrictionStatus?: any;
 }
+
+export type Order = 'asc' | 'desc';

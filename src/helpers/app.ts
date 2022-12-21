@@ -1,30 +1,5 @@
-// export const getBrowserLocales = (options = {}): string[] => {
-//     const defaultOptions = {
-//         languageCodeOnly: false
-//     };
-//
-//     const opt = {
-//         ...defaultOptions,
-//         ...options
-//     };
-//
-//     const browserLocales = navigator.languages === undefined ? [navigator.language] : navigator.languages;
-//
-//     if (!browserLocales) {
-//         return [];
-//     }
-//
-//     return browserLocales.map((locale) => {
-//         const trimmedLocale = locale?.trim();
-//
-//         return opt.languageCodeOnly ? trimmedLocale.split(/[-_]/)[0] : trimmedLocale;
-//     });
-// };
-//
-// export const getBrowserLocale = (): string => {
-//     const locales = getBrowserLocales();
-//     return locales[0];
-// };
+import {Order} from "../models/appModels";
+import {orderBy} from "lodash";
 
 /**
  * Check if values is empty
@@ -63,3 +38,7 @@ export const capitalizeLetters = (value: string): string | undefined => {
         return value?.charAt(0).toUpperCase() + value?.slice(1);
     }
 };
+
+export const stableSort = (array: any[], sortOrder: Order, sortBy: string) => {
+    return orderBy(array, [sortBy], [sortOrder]);
+}
