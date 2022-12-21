@@ -23,6 +23,7 @@ import SearchBox from "../shared/SearchBox";
 import makeStyles from "@mui/styles/makeStyles";
 import {aggregateRestrictionStatus, aggregateValues} from "../../helpers/calculations";
 import Row from "./ClientRowComponent";
+import {fetchCurrencyExchangeRates} from "../../store/thunks/currencyThunk";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -77,21 +78,21 @@ export const CollapsibleTable = () => {
      */
     useEffect(() => {
         dispatch(fetchClientData());
-        // dispatch(fetchCurrencyExchangeRates('CHF'));
+        dispatch(fetchCurrencyExchangeRates('CHF'));
     }, [dispatch]);
 
     /**
      * Sets the row data for the ag grid
      */
     useEffect(() => {
-        if (clientData) {
+        if (clientData && exchangeRates) {
             const extendedData: ClientExtended[] = clientData.map(a => ({
                 ...a,
                 clientAggregatedNetWorth: aggregateValues(a, 'netWorth', exchangeRates),
                 clientAggregatedCapitalGain: aggregateValues(a, 'capitalGain', exchangeRates),
                 clientAggregatedRestrictionStatus: aggregateRestrictionStatus(a)
             }));
-            //console.log(exchangeRates);
+            console.log(exchangeRates);
             setRowData(extendedData.slice().sort(function (a, b) {
                 if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1;
                 if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1;
