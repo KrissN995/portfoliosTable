@@ -2,6 +2,7 @@
   "name": "customer-portfolios",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://anyapi.io/api/v1/",
   "dependencies": {
     "@babel/core": "7.0.0",
     "@babel/plugin-syntax-flow": "7.14.5",

@@ -29,6 +29,7 @@ import SearchBox from '../shared/SearchBox';
 import {fetchClientData} from '../../store/thunks/clientThunk';
 import {useAppDispatch} from '../../store/store';
 import {setClientDialogOpen, setSelectedClient} from '../../store/slices/clientSlice';
+import {fetchCurrencyExchangeRates} from "../../store/thunks/currencyThunk";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -169,14 +170,14 @@ const AgGridMainComponent = () => {
      */
     useEffect(() => {
         dispatch(fetchClientData());
-        // dispatch(fetchCurrencyExchangeRates('CHF'));
+        dispatch(fetchCurrencyExchangeRates('CHF'));
     }, [dispatch]);
 
     /**
      * Sets the row data for the ag grid
      */
     useEffect(() => {
-        if (clientData) {
+        if (clientData && exchangeRates) {
             //console.log(exchangeRates);
             setRowData(clientData.slice().sort(function (a, b) {
                 if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1;
@@ -184,7 +185,7 @@ const AgGridMainComponent = () => {
                 return 0;
             }));
         }
-    }, [clientData]);
+    }, [clientData,exchangeRates]);
 
     return (<Paper elevation={3} className={clsx(getGridTheme(isDarkTheme), classes.root)}>
         <div style={{display: 'flex', height: '4em', justifyContent: 'flex-end', alignItems: 'center'}}>

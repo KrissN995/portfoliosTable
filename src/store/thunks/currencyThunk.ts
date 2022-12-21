@@ -6,12 +6,26 @@ import {setExchangeRates} from "../slices/currencySlice";
  * Fetch exchange rates based on base currency
  * @param baseCurrency
  */
-export const fetchCurrencyExchangeRates: any = (baseCurrency:string) => async (dispatch: any) => {
+export const fetchCurrencyExchangeRates: any = (baseCurrency: string) => async (dispatch: any) => {
+    const currencyService = new CurrencyConverterService();
     try {
-        const currencyService = new CurrencyConverterService();
         const exchangeRates = await currencyService.getExchangeRates(baseCurrency);
-        dispatch(setExchangeRates(exchangeRates));
-    } catch (error:any) {
-        dispatch(setErrorMessage(error));
+        if(exchangeRates){
+            dispatch(setExchangeRates(exchangeRates));
+        } else{
+            try {
+                const exchangeRates = await currencyService.getMockExchangeData();
+                dispatch(setExchangeRates(exchangeRates));
+            } catch (innerError: any) {
+                dispatch(setErrorMessage(innerError));
+            }
+        }
+    } catch (error: any) {
+        try {
+            const exchangeRates = await currencyService.getMockExchangeData();
+            dispatch(setExchangeRates(exchangeRates));
+        } catch (innerError: any) {
+            dispatch(setErrorMessage(innerError));
+        }
     }
 };
